@@ -5,11 +5,15 @@ class LoginView {
 
   submit(event) {
     event.preventDefault()
-    this._onLogin(this.nameInput().value)
+    this._onLogin(this.nameInput().value, parseFloat(this.totalPlayersInput().value))
   }
 
   nameInput() {
     return document.getElementById('playerName')
+  }
+
+  totalPlayersInput() {
+    return document.getElementById('totalPlayers')
   }
 
   submitButton() {
@@ -22,6 +26,7 @@ class LoginView {
       <form>
         <label for="playerName">Player Name</label>
         <input type="text" id="playerName"/>
+        <input type="text" id="totalPlayers"/>
         <input type="submit" value="Submit" id="submit"/>
       </form>
     `

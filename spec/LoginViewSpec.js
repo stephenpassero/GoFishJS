@@ -1,4 +1,3 @@
-/* eslint no-undef: 0 */
 describe('LoginView', () => {
   // Should I split this into two tests?
   it('calls the function passed in with the player\'s name and the number of players', () => {
@@ -8,7 +7,7 @@ describe('LoginView', () => {
       calledWith = name
       totalPlayers = numOfPlayers
     }
-    const loginView = new LoginView(onLogin)
+    const loginView = new LoginView(onLogin) // eslint-disable-line no-undef
     const container = document.createElement('div')
     document.body.appendChild(container)
     loginView.render(container)

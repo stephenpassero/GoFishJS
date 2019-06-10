@@ -4,7 +4,7 @@ class GoFishController {
   }
 
   login() {
-    const loginView = new LoginView(this.startGame.bind(this))
+    const loginView = new LoginView(this.startGame.bind(this)) // eslint-disable-line no-undef
     loginView.render(this.container())
   }
 

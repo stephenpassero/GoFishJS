@@ -11,4 +11,8 @@ class Card {
   suit() {
     return this._suit
   }
+
+  imagePath() {
+    return `${this._suit.charAt(0).toLowerCase()}${this._rank.toLowerCase()}`
+  }
 }

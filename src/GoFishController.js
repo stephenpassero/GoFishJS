@@ -10,12 +10,11 @@ class GoFishController {
   }
 
   startGame(name, numOfPlayers) {
-    const player = '' // new Player
-    const game = '' // new Game
-    // Pass the bot names from game to the game view
-    // Game will pass the bot names into the game view
-    const view = new GameView(name, 'botNames') // new GameView
-    view.render(this.container())
+    const game = new Game(name, numOfPlayers) // new Game
+    game.startGame()
+    const humanPlayer = game.players()[name.toLowerCase()]
+    const view = new GameView(name, ...game.botNames()) // new GameView
+    view.render(this.container(), humanPlayer.cards())
   }
 }
 

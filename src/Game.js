@@ -12,6 +12,10 @@ class Game {
     this._deck.shuffle()
   }
 
+  botNames() {
+    return this._botNames
+  }
+
   players() {
     return this._players
   }

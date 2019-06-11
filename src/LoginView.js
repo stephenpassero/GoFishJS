@@ -28,7 +28,7 @@ class LoginView {
         <label for="playerName">Player Name</label>
         <input type="text" required id="playerName"/>
         <label for="playerName">Number of Players</label>
-        <input type="number" min="2" max="6" required id="totalPlayers"/>
+        <input type="number" min="2" max="4" required id="totalPlayers"/>
         <input type="submit" value="Submit" id="submit"/>
       </form>
     `

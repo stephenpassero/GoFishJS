@@ -1,6 +1,5 @@
 /* eslint no-undef: 0 */
 describe('Player', () => {
-  let player
   beforeEach(() => {
     player = new Player('Player1')
   })
@@ -32,19 +31,6 @@ describe('Player', () => {
     expect(player.cards()).toEqual([card1])
   })
 
-  it('can take cards from other players', () => {
-    const player2 = new Player('Player2')
-    const card1 = new Card('A', 'Spades')
-    const card2 = new Card('8', 'Hearts')
-    const card3 = new Card('8', 'Clubs')
-    player.addCards(card1)
-    player2.addCards(card2, card3)
-    // requestCards(player, targetPlayer, rank)
-    player.requestCards(player, player2, '8')
-    expect(player.cardsLeft()).toEqual(3)
-    expect(player2.cardsLeft()).toEqual(0)
-  })
-
   it('can pair four cards of the same rank', () => {
     const card1 = new Card('K', 'Hearts')
     const card2 = new Card('K', 'Diamonds')
@@ -55,5 +41,14 @@ describe('Player', () => {
     player.pairCards()
     expect(player.cardsLeft()).toEqual(1)
     expect(player.pairs()).toEqual(['K'])
+  })
+
+  describe('#setHand', () => {
+    it('sets the player\'s hand', () => {
+      const card1 = new Card('A', 'Spades')
+      const card2 = new Card('8', 'Hearts')
+      player.setHand(card1, card2)
+      expect(player.cards()).toEqual([card1, card2])
+    })
   })
 })

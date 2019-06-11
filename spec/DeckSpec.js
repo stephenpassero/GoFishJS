@@ -1,7 +1,7 @@
+/* eslint no-undef: 0 */
 describe('Deck', () => {
-  let deck
   beforeEach(() => {
-    deck = new Deck() // eslint-disable-line no-undef
+    deck = new Deck()
   })
 
   it('starts with 52 card', () => {
@@ -15,8 +15,8 @@ describe('Deck', () => {
   })
 
   it('can have cards added to it', () => {
-    const card = new Card(1, 'Clubs') // eslint-disable-line no-undef
-    const card2 = new Card(8, 'Hearts') // eslint-disable-line no-undef
+    const card = new Card(1, 'Clubs')
+    const card2 = new Card(8, 'Hearts')
     deck.add(card, card2)
     expect(deck.cardsLeft()).toEqual(54)
   })

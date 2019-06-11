@@ -2,7 +2,9 @@
 describe('GameView', () => {
   describe('#render', () => {
     it('shows the player and the correct number of bots', () => {
-      const gameView = new GameView('A Cool Person', 5)
+      const game = new Game('A Cool Person', 5)
+      game.startGame()
+      const gameView = new GameView(game)
       const container = document.createElement('div')
       document.body.appendChild(container)
       gameView.render(container)

@@ -2,6 +2,7 @@
 class Game {
   constructor(playerName, totalPlayers) {
     this._playerName = playerName
+    this._totalPlayers = totalPlayers
     this._botNames = []
     for (let i = 0; i < totalPlayers - 1; i++) {
       // Makes the first bot be player2
@@ -10,6 +11,26 @@ class Game {
     this._players = {}
     this._deck = new Deck()
     this._deck.shuffle()
+    this._playerTurn = 1
+  }
+
+  playerTurn() {
+    return this._playerTurn
+  }
+
+  incrementPlayerTurn() {
+    this._playerTurn++
+    if (this._playerTurn > this._totalPlayers) {
+      this._playerTurn = 1
+    }
+  }
+
+  findPlayer(playerName) {
+    return this._players[playerName.toLowerCase()]
+  }
+
+  playerName() {
+    return this._playerName
   }
 
   botNames() {
@@ -22,6 +43,38 @@ class Game {
 
   deck() {
     return this._deck
+  }
+
+  refillCards(...playersToRefill) {
+    for (const player of playersToRefill) {
+      if (player.cardsLeft() === 0) {
+        player.addCards(...this._deck.deal(5))
+      }
+    }
+  }
+
+  requestCards(player, target, rank) {
+    const cards = target.cardsInHand(rank)
+    if (cards.length !== 0) {
+      target.removeCardsByRank(rank)
+      player.addCards(...cards)
+      return true
+    }
+    return false
+  }
+
+  runRound(playerName, targetName, rank) {
+    const player = this.findPlayer(playerName)
+    const target = this.findPlayer(targetName)
+    // If the target has a card that the player asked for
+    if (this.requestCards(player, target, rank)) {
+      player.pairCards()
+      this.refillCards(player, target)
+      this.incrementPlayerTurn()
+    } else {
+      player.addCards(...this._deck.deal(1))
+      this.incrementPlayerTurn()
+    }
   }
 
   startGame() {

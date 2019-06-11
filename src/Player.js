@@ -13,6 +13,10 @@ class Player {
     return this._name
   }
 
+  setHand(...cards) {
+    this._cards = cards
+  }
+
   cardsLeft() {
     return this._cards.length
   }
@@ -33,17 +37,6 @@ class Player {
         this._cards = this._cards.filter(card => !sameRank.includes(card))
       }
     })
-  }
-
-  // I don't really like the player interacting with other player's decks without going through game
-  requestCards(player, target, rank) {
-    const cards = target.cardsInHand(rank)
-    if (cards !== []) {
-      target.removeCardsByRank(rank)
-      player.addCards(...cards)
-    }
-    // Not sure if I need this return statement
-    return false
   }
 
   addCards(...cards) {

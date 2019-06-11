@@ -22,12 +22,12 @@ describe('Deck', () => {
   })
 
   describe('#deal', () => {
-    it('should return an array of the cards dealt', () => {
+    it('returns an array of the cards dealt', () => {
       const firstFiveCards = deck.cards().slice(0, 5)
       expect(deck.deal(5)).toEqual(firstFiveCards)
     })
 
-    it('should remove the cards it deals', () => {
+    it('removes the cards it deals', () => {
       deck.deal(10)
       expect(deck.cardsLeft()).toEqual(42)
     })

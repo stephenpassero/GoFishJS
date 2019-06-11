@@ -18,6 +18,7 @@ class Deck {
     return this._cards.length
   }
 
+  // With this ever be used?
   add(...cards) {
     this._cards = cards.concat(this._cards)
   }

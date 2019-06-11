@@ -1,18 +1,19 @@
+/* eslint no-undef: 0 */
 class GoFishController {
   container() {
     return document.getElementById('main')
   }
 
   login() {
-    const loginView = new LoginView(this.startGame.bind(this)) // eslint-disable-line no-undef
+    const loginView = new LoginView(this.startGame.bind(this))
     loginView.render(this.container())
   }
 
-  startGame(name) {
+  startGame(name, numOfPlayers) {
     const player = '' // new Player
     const game = '' // new Game
-    const view = '' // new GameView
-    // view.draw(this.container())
+    const view = new GameView(name, numOfPlayers) // new GameView
+    view.render(this.container())
   }
 }
 

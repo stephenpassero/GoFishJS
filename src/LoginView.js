@@ -6,6 +6,7 @@ class LoginView {
   submit(event) {
     event.preventDefault()
     this._onLogin(this.nameInput().value, parseFloat(this.totalPlayersInput().value))
+    document.body.querySelector('form').remove()
   }
 
   nameInput() {
@@ -25,9 +26,9 @@ class LoginView {
     const form = `
       <form>
         <label for="playerName">Player Name</label>
-        <input type="text" id="playerName"/>
+        <input type="text" required id="playerName"/>
         <label for="playerName">Number of Players</label>
-        <input type="text" id="totalPlayers"/>
+        <input type="number" min="2" max="6" required id="totalPlayers"/>
         <input type="submit" value="Submit" id="submit"/>
       </form>
     `

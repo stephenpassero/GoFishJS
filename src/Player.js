@@ -9,6 +9,10 @@ class Player {
     return this._cards
   }
 
+  name() {
+    return this._name
+  }
+
   cardsLeft() {
     return this._cards.length
   }

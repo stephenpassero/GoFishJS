@@ -29,6 +29,5 @@ class Game {
     for (const player of Object.values(this._players)) {
       player.addCards(...this._deck.deal(5))
     }
-    debugger
   }
 }

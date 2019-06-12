@@ -89,6 +89,9 @@ class GameView {
       <div class='buttonDiv'>
         ${this.renderSubmitButton()}
       </div>
+      <div class="log">
+        ${this._game.log().join('<br>')}
+      </div>
     `
     div.innerHTML = gameView
     container.appendChild(div)

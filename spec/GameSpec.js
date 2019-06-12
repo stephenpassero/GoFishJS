@@ -40,12 +40,17 @@ describe('Game', () => {
     expect(game.playerTurn()).toEqual(1)
   })
 
+  it('has a game log', () => {
+    game.addLog('Player1', 'Player2', 'J')
+    game.addLog('Player2')
+    expect(game.log()).toEqual(['Player2 went fishing', 'Player1 took a(n) J from Player2'])
+  })
+
   it('refills player\'s cards when they run out', () => {
     const card1 = new Card('10', 'Spades')
     const card2 = new Card('10', 'Diamonds')
     player.setHand(card1)
     player2.setHand(card2)
-    // CHANGE THIS SOMEHOW!!!!
     game._deck._cards.length = 3
     game.runRound(player.name(), player2.name(), card1.rank())
     expect(player2.cardsLeft()).toEqual(3)
@@ -74,7 +79,7 @@ describe('Game', () => {
       player.setHand(card1)
       player2.setHand(card2)
       game.runRound(player.name(), player2.name(), card1.rank())
-      expect(player.cardsLeft()).toEqual(2)
+      expect(game.log()).toContain(`${player.name()} went fishing`)
     })
   })
 })

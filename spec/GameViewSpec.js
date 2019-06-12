@@ -30,6 +30,17 @@ describe('GameView', () => {
       expect(document.querySelector('.card').classList).toContain('selected')
     })
 
+    it('shows a game log', () => {
+      const card = document.querySelector('.card')
+      const opponent = document.querySelector('h3')
+      card.click()
+      opponent.click()
+      const requestCardsButton = document.querySelector('button')
+      requestCardsButton.click()
+      const gameLog = document.querySelector('.log')
+      expect(gameLog.innerHTML).not.toEqual('')
+    })
+
     it('requests cards from other players', () => {
       const card = document.querySelector('.card')
       const opponent = document.querySelector('h3')

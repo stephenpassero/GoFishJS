@@ -49,3 +49,11 @@ label {
 .buttonDiv {
   text-align: center;
 }
+
+.log {
+  text-align: left;
+  display: inline-block;
+  position: fixed;
+  left: 10px;
+  bottom: 25%;
+}

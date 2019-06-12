@@ -12,10 +12,26 @@ class Game {
     this._deck = new Deck()
     this._deck.shuffle()
     this._playerTurn = 1
+    this._log = []
   }
 
   playerTurn() {
     return this._playerTurn
+  }
+
+  log() {
+    return this._log
+  }
+
+  addLog(player, target, rank) {
+    if (rank) {
+      this._log.unshift(`${player} took a(n) ${rank} from ${target}`)
+    } else {
+      this._log.unshift(`${player} went fishing`)
+    }
+    if (this._log.length > 10) {
+      this._log.pop()
+    }
   }
 
   incrementPlayerTurn() {
@@ -64,7 +80,9 @@ class Game {
   runBotTurn(botName) {
     if (botName) {
       const bot = this.findPlayer(botName)
+      // Pick a random card from my hand
       const rankToRequest = bot.cards()[Math.floor(Math.random() * bot.cardsLeft())].rank()
+      // Pick and random player that isn't me to request a card
       let playerToRequest = Object.values(this._players)[this.generateRandomNum(this._totalPlayers)]
       while (playerToRequest === bot) {
         playerToRequest = Object.values(this._players)[this.generateRandomNum(this._totalPlayers)]
@@ -90,10 +108,12 @@ class Game {
     const target = this.findPlayer(targetName)
     // If the target has a card that the player asked for
     if (this.requestCards(player, target, rank) && rank) {
+      this.addLog(player.name(), target.name(), rank)
       player.pairCards()
       this.refillCards(player, target)
     } else {
       player.addCards(...this._deck.deal(1))
+      this.addLog(player.name())
       player.pairCards()
       this.incrementPlayerTurn()
     }

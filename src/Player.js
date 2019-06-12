@@ -40,7 +40,6 @@ class Player {
   }
 
   addCards(...cards) {
-    // Is there a better way to do this?
     this._cards = this._cards.concat(cards)
   }
 

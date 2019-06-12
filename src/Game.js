@@ -57,6 +57,24 @@ class Game {
     }
   }
 
+  generateRandomNum(maxNum) {
+    return Math.floor(Math.random() * maxNum)
+  }
+
+  runBotTurn(botName) {
+    if (botName) {
+      const bot = this.findPlayer(botName)
+      const rankToRequest = bot.cards()[Math.floor(Math.random() * bot.cardsLeft())].rank()
+      let playerToRequest = Object.values(this._players)[this.generateRandomNum(this._totalPlayers)]
+      while (playerToRequest === bot) {
+        playerToRequest = Object.values(this._players)[this.generateRandomNum(this._totalPlayers)]
+      }
+      this.runRound(botName, playerToRequest.name(), rankToRequest)
+    } else {
+      this.incrementPlayerTurn()
+    }
+  }
+
   requestCards(player, target, rank) {
     const cards = target.cardsInHand(rank)
     if (cards.length !== 0) {
@@ -74,10 +92,14 @@ class Game {
     if (this.requestCards(player, target, rank) && rank) {
       player.pairCards()
       this.refillCards(player, target)
-      this.incrementPlayerTurn()
     } else {
       player.addCards(...this._deck.deal(1))
+      player.pairCards()
       this.incrementPlayerTurn()
+    }
+    if (this._playerTurn !== 1) {
+      const botPlayerName = Object.keys(this._players)[this._playerTurn - 1]
+      this.runBotTurn(botPlayerName)
     }
   }
 

@@ -20,6 +20,13 @@ class GameView {
     this.render(this._container)
   }
 
+  resetAndRender(container) {
+    this._selectedRank = ''
+    this._selectedOpponent = ''
+    this._container.innerHTML = ''
+    this.render(container)
+  }
+
   getCardImages(playerName) {
     const cards = this._game.findPlayer(playerName).cards()
     return cards.map((card) => {
@@ -48,13 +55,6 @@ class GameView {
     return ''
   }
 
-  resetAndRender(container) {
-    this._selectedRank = ''
-    this._selectedOpponent = ''
-    this._container.innerHTML = ''
-    this.render(container)
-  }
-
   runGameRound() {
     this._game.runRound(this._humanPlayerName, this._selectedOpponent, this._selectedRank)
     this.resetAndRender(this._container)
@@ -67,20 +67,21 @@ class GameView {
     }
   }
 
-  // Clean up this method
-  render(container) {
-    this._container = container
-    // Re-render this when the user picks a card and an opponent
-    const div = document.createElement('div')
+  getBotHTML(container) {
     let opponentView
-    const botHTML = this._game.botNames().map((name) => {
+    return this._game.botNames().map((name) => {
       const player = this._game.findPlayer(name)
       opponentView = new OpponentView(name, player.cards(), player.pairs(), this._selectedOpponent)
       return opponentView.render(container)
     })
+  }
+
+  render(container) {
+    this._container = container
+    const div = document.createElement('div')
     const cardImages = this.getCardImages(this._humanPlayerName)
     const gameView = `
-      ${botHTML.join('')}
+      ${this.getBotHTML(container).join('')}
       <div class="human">
         <h2>${this._humanPlayerName}</h2>
         ${cardImages.join('')}

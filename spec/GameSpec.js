@@ -2,7 +2,7 @@
 describe('Game', () => {
   let game, player, player2
   beforeEach(() => {
-    game = new Game('Me', 3)
+    game = new Game('Me', 2)
     game.startGame()
     player = game.findPlayer('Me')
     player2 = game.findPlayer('Player2')
@@ -37,7 +37,6 @@ describe('Game', () => {
     game.incrementPlayerTurn()
     expect(game.playerTurn()).toEqual(2)
     game.incrementPlayerTurn()
-    game.incrementPlayerTurn()
     expect(game.playerTurn()).toEqual(1)
   })
 
@@ -52,6 +51,11 @@ describe('Game', () => {
     expect(player2.cardsLeft()).toEqual(3)
   })
 
+  it('can run a bot\'s turn', () => {
+    game.runBotTurn(player2.name())
+    expect(player2.cardsLeft()).toBeGreaterThan(5)
+  })
+
   describe('#runRound', () => {
     it('requests cards from other players', () => {
       const card1 = new Card('10', 'Spades')
@@ -62,7 +66,6 @@ describe('Game', () => {
       const cards = player.cards()
       expect(cards).toEqual([card1, card2])
       expect(player2.cardsLeft()).toEqual(5)
-      expect(game.playerTurn()).toEqual(2)
     })
 
     it('goes fishing when the target doesn\'t have the card asked for', () => {
@@ -72,7 +75,6 @@ describe('Game', () => {
       player2.setHand(card2)
       game.runRound(player.name(), player2.name(), card1.rank())
       expect(player.cardsLeft()).toEqual(2)
-      expect(game.playerTurn()).toEqual(2)
     })
   })
 })

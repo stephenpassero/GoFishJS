@@ -14,13 +14,6 @@ describe('Deck', () => {
     expect(deck.cards()).not.toEqual(originalCards)
   })
 
-  it('can have cards added to it', () => {
-    const card = new Card(1, 'Clubs')
-    const card2 = new Card(8, 'Hearts')
-    deck.add(card, card2)
-    expect(deck.cardsLeft()).toEqual(54)
-  })
-
   describe('#deal', () => {
     it('returns an array of the cards dealt', () => {
       const firstFiveCards = deck.cards().slice(0, 5)

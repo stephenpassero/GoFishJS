@@ -18,6 +18,18 @@ label {
   margin: 10pt;
 }
 
+.opponent {
+  max-width: 350pt;
+  margin: 5pt auto;
+  text-align: center;
+}
+
+.human {
+  max-width: 350pt;
+  margin: 5pt auto;
+  text-align: center;
+}
+
 .textInput {
   border-radius: 4pt;
 }
@@ -25,4 +37,11 @@ label {
 #submit {
   margin: 10pt;
   width: 50pt;
+}
+
+.selected {
+  border-color: #eec64f;
+  border-width: 6px;
+  border-style: solid;
+  border-radius: 3px;
 }

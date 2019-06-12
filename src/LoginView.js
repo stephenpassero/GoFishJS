@@ -26,9 +26,9 @@ class LoginView {
     const form = `
       <form>
         <label for="playerName">Player Name</label>
-        <input type="text" required id="playerName"/>
+        <input type="text" class="textInput" required id="playerName"/>
         <label for="playerName">Number of Players</label>
-        <input type="number" min="2" max="4" required id="totalPlayers"/>
+        <input type="number" class="textInput" min="2" max="4" required id="totalPlayers"/>
         <input type="submit" value="Submit" id="submit"/>
       </form>
     `

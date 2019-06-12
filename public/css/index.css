@@ -1,0 +1,28 @@
+body {
+  background-color: #339933;
+  font-family: 'Fira Sans', sans-serif;
+}
+
+img {
+  margin: 0 7px 0 7px;
+}
+
+form {
+  max-width: 400pt;
+  margin: 100pt auto;
+  justify-content: center;
+  text-align: center;
+}
+
+label {
+  margin: 10pt;
+}
+
+.textInput {
+  border-radius: 4pt;
+}
+
+#submit {
+  margin: 10pt;
+  width: 50pt;
+}

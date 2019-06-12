@@ -41,6 +41,17 @@ describe('Game', () => {
     expect(game.playerTurn()).toEqual(1)
   })
 
+  it('refills player\'s cards when they run out', () => {
+    const card1 = new Card('10', 'Spades')
+    const card2 = new Card('10', 'Diamonds')
+    player.setHand(card1)
+    player2.setHand(card2)
+    // CHANGE THIS SOMEHOW!!!!
+    game._deck._cards.length = 3
+    game.runRound(player.name(), player2.name(), card1.rank())
+    expect(player2.cardsLeft()).toEqual(3)
+  })
+
   describe('#runRound', () => {
     it('requests cards from other players', () => {
       const card1 = new Card('10', 'Spades')

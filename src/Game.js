@@ -48,7 +48,11 @@ class Game {
   refillCards(...playersToRefill) {
     for (const player of playersToRefill) {
       if (player.cardsLeft() === 0) {
-        player.addCards(...this._deck.deal(5))
+        if (this._deck.cardsLeft() < 5) {
+          player.addCards(...this._deck.deal(this._deck.cardsLeft()))
+        } else {
+          player.addCards(...this._deck.deal(5))
+        }
       }
     }
   }
@@ -67,7 +71,7 @@ class Game {
     const player = this.findPlayer(playerName)
     const target = this.findPlayer(targetName)
     // If the target has a card that the player asked for
-    if (this.requestCards(player, target, rank)) {
+    if (this.requestCards(player, target, rank) && rank) {
       player.pairCards()
       this.refillCards(player, target)
       this.incrementPlayerTurn()

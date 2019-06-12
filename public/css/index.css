@@ -4,7 +4,7 @@ body {
 }
 
 img {
-  margin: 0 7px 0 7px;
+  margin: 0 -12.5px 0 -12.5px;
 }
 
 form {
@@ -19,7 +19,7 @@ label {
 }
 
 .opponent {
-  max-width: 350pt;
+  max-width: 300pt;
   margin: 5pt auto;
   text-align: center;
 }

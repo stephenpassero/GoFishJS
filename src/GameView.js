@@ -23,10 +23,14 @@ class GameView {
     console.log(this._opponentSelected)
   }
 
+  getCardImages(playerName) {
+    const cards = this._game.findPlayer(playerName).cards()
+    return cards.map(card => `<img class="card" name="${card.rank()}" src="public/img/cards/${card.imagePath()}.png" />`)
+  }
+
   // Clean up this method
   render(container) {
     // Re-render this when the user picks a card and an opponent
-    const cards = this._game.findPlayer(this._humanPlayerName).cards()
     const div = document.createElement('div')
     let opponentView
     const botHTML = this._game.botNames().map((name) => {
@@ -34,7 +38,7 @@ class GameView {
       opponentView = new OpponentView(name, player.cards(), player.pairs())
       return opponentView.render(container)
     })
-    const cardImages = cards.map(card => `<img class="card" name="${card.rank()}" src="public/img/cards/${card.imagePath()}.png" />`)
+    const cardImages = this.getCardImages(this._humanPlayerName)
     const gameView = `
       ${botHTML.join('')}
       <div class="human">

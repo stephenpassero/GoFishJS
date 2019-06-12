@@ -1,6 +1,5 @@
 /* eslint no-undef: 0 */
 describe('LoginView', () => {
-  // Should I split this into two tests?
   it('calls the function passed in with the player\'s name and the number of players', () => {
     const onLogin = (name, numOfPlayers) => {
       calledWith = name

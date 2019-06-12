@@ -28,6 +28,17 @@ class GameView {
     return cards.map(card => `<img class="card" name="${card.rank()}" src="public/img/cards/${card.imagePath()}.png" />`)
   }
 
+  addHighlightOnClick() {
+    const cardsImages = document.querySelectorAll('.card')
+    for (const card of cardsImages) {
+      card.onclick = this.cardClicked.bind(this, card, cardsImages)
+    }
+    const opponentsDiv = document.querySelectorAll('.opponent')
+    for (const opponentDiv of opponentsDiv) {
+      opponentDiv.onclick = this.opponentClicked.bind(this, opponentDiv, opponentsDiv)
+    }
+  }
+
   // Clean up this method
   render(container) {
     // Re-render this when the user picks a card and an opponent
@@ -48,13 +59,6 @@ class GameView {
     `
     div.innerHTML = gameView
     container.appendChild(div)
-    const cardsImages = document.querySelectorAll('.card')
-    for (const card of cardsImages) {
-      card.onclick = this.cardClicked.bind(this, card, cardsImages)
-    }
-    const opponentsDiv = document.querySelectorAll('.opponent')
-    for (const opponentDiv of opponentsDiv) {
-      opponentDiv.onclick = this.opponentClicked.bind(this, opponentDiv, opponentsDiv)
-    }
+    this.addHighlightOnClick()
   }
 }

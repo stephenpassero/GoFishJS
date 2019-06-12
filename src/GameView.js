@@ -3,13 +3,13 @@ class GameView {
   constructor(game) {
     this._game = game
     this._humanPlayerName = this._game.playerName()
-    this._selectedCard = ''
+    this._selectedRank = ''
     this._selectedOpponent = ''
     this._container = ''
   }
 
   cardClicked(card) {
-    this._selectedCard = card.name
+    this._selectedRank = card.name
     this._container.innerHTML = ''
     this.render(this._container)
   }
@@ -23,7 +23,7 @@ class GameView {
   getCardImages(playerName) {
     const cards = this._game.findPlayer(playerName).cards()
     return cards.map((card) => {
-      if (card.rank() === this._selectedCard) {
+      if (card.rank() === this._selectedRank) {
         return `<img class="card selected" name="${card.rank()}" src="public/img/cards/${card.imagePath()}.png" />`
       }
       return `<img class="card" name="${card.rank()}" src="public/img/cards/${card.imagePath()}.png" />`
@@ -38,6 +38,32 @@ class GameView {
     const opponentsDiv = document.querySelectorAll('.opponent')
     for (const opponentDiv of opponentsDiv) {
       opponentDiv.onclick = this.opponentClicked.bind(this, opponentDiv)
+    }
+  }
+
+  renderSubmitButton() {
+    if (this._selectedOpponent !== '' && this._selectedRank !== '') {
+      return '<button class="requestCards">Request Cards</button>'
+    }
+    return ''
+  }
+
+  resetAndRender(container) {
+    this._selectedRank = ''
+    this._selectedOpponent = ''
+    this._container.innerHTML = ''
+    this.render(container)
+  }
+
+  runGameRound() {
+    this._game.runRound(this._humanPlayerName, this._selectedOpponent, this._selectedRank)
+    this.resetAndRender(this._container)
+  }
+
+  setSubmitRequestHandler() {
+    const requestCardsButton = document.querySelector('.requestCards')
+    if (requestCardsButton) {
+      requestCardsButton.onclick = this.runGameRound.bind(this)
     }
   }
 
@@ -59,9 +85,13 @@ class GameView {
         <h2>${this._humanPlayerName}</h2>
         ${cardImages.join('')}
       </div>
+      <div class='buttonDiv'>
+        ${this.renderSubmitButton()}
+      </div>
     `
     div.innerHTML = gameView
     container.appendChild(div)
     this.addHighlightOnClick()
+    this.setSubmitRequestHandler()
   }
 }

@@ -26,9 +26,8 @@ describe('GameView', () => {
     })
 
     it('highlights a card when the card is clicked', () => {
-      const card = document.querySelector('.card')
-      card.click()
-      expect(card.classList).toContain('selected')
+      document.querySelector('.card').click()
+      expect(document.querySelector('.card').classList).toContain('selected')
     })
   })
 })

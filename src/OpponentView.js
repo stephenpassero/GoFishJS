@@ -6,7 +6,7 @@ class OpponentView {
     this._selectedOpponent = selectedOpponent
   }
 
-  getSelected() {
+  render() {
     const opponentMarkup = `<h3>${this._name}</h3>
     ${this._cards.map(card => '<img class="cardBack" src="public/img/cards/backs_red.png"/>').join('')}`
     if (this._selectedOpponent === this._name) {
@@ -21,13 +21,5 @@ class OpponentView {
       ${opponentMarkup}
     </div>
     `
-  }
-
-  render(container) {
-    const div = document.createElement('div')
-    // Eventually render pairs here - Don't forget to write tests
-    const opponent = this.getSelected()
-    div.innerHTML = opponent
-    container.appendChild(div)
   }
 }

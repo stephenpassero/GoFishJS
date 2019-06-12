@@ -19,9 +19,16 @@ label {
 }
 
 .opponent {
-  max-width: 300pt;
-  margin: 5pt auto;
-  text-align: center;
+  margin: 20px;
+  text-align:center;
+  padding: 0 20px;
+}
+
+.flex-container {
+    display: flex;
+    justify-content: space-around;
+    margin: 0 auto;
+    flex-wrap: nowrap;
 }
 
 .human {
@@ -37,6 +44,11 @@ label {
 #submit {
   margin: 10pt;
   width: 50pt;
+}
+
+.deck {
+  margin: 15px auto;
+  text-align:center;
 }
 
 .selected {

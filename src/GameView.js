@@ -67,13 +67,20 @@ class GameView {
     }
   }
 
-  getBotHTML(container) {
+  getBotHTML() {
     let opponentView
     return this._game.botNames().map((name) => {
       const player = this._game.findPlayer(name)
       opponentView = new OpponentView(name, player.cards(), player.pairs(), this._selectedOpponent)
-      return opponentView.render(container)
+      return opponentView.render()
     })
+  }
+
+  renderDeck() {
+    if (this._game.deck().cardsLeft() > 0) {
+      return '<img src="public/img/cards/backs_red.png"/>'
+    }
+    return ''
   }
 
   render(container) {
@@ -81,12 +88,17 @@ class GameView {
     const div = document.createElement('div')
     const cardImages = this.getCardImages(this._humanPlayerName)
     const gameView = `
-      ${this.getBotHTML(container).join('')}
+      <div class="flex-container">
+        ${this.getBotHTML(container).join('')}
+      </div>
+      <div class="deck">
+        ${this.renderDeck()}
+      </div>
       <div class="human">
         <h2>${this._humanPlayerName}</h2>
         ${cardImages.join('')}
       </div>
-      <div class='buttonDiv'>
+      <div class="buttonDiv">
         ${this.renderSubmitButton()}
       </div>
       <div class="log">

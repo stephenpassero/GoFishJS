@@ -10,6 +10,7 @@ class EndGameView {
   render(container) {
     container.innerHTML = ''
     const div = document.createElement('div')
+    div.classList.add('finalRankings')
     const markup = `
       ${this.generateHTMLRankings(this._game.playerPairs()).join('')}
     `

@@ -41,6 +41,10 @@ label {
   border-radius: 4px;
 }
 
+.finalrankings {
+  text-align: center;
+}
+
 #submit {
   margin: 10px;
   width: 50px;

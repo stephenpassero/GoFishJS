@@ -21,8 +21,8 @@ describe('GameView', () => {
 
     it('shows the correct number of cards', () => {
       const cardsOnScreen = document.querySelectorAll('img').length
-      // 4 players with 5 cards each: 4 * 5 = 20
-      expect(cardsOnScreen).toEqual(10)
+      // 4 players with 5 cards each: 2 * 5 = 10 + 1 card to represent the deck = 11
+      expect(cardsOnScreen).toEqual(11)
     })
 
     it('highlights a card when the card is clicked', () => {
@@ -39,6 +39,18 @@ describe('GameView', () => {
       requestCardsButton.click()
       const gameLog = document.querySelector('.log')
       expect(gameLog.innerHTML).not.toEqual('')
+    })
+
+    it('shows paired cards', () => {
+      const card1 = new Card('3', 'Hearts')
+      const card2 = new Card('3', 'Diamonds')
+      const card3 = new Card('3', 'Spades')
+      const card4 = new Card('3', 'Clubs')
+      const player = game.findPlayer('A Cool Person')
+      player.setHand(card1, card2, card3, card4)
+      player.pairCards()
+      const pairedCards = document.querySelectorAll('.pairedCard')
+      // expect(pairedCards.length).toBeGreaterThan(0)
     })
 
     it('requests cards from other players', () => {

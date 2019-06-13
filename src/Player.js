@@ -30,13 +30,16 @@ class Player {
   }
 
   pairCards() {
+    let pairedRank
     this._cards.forEach((originalCard) => {
       const sameRank = this._cards.filter(card => card.rank() === originalCard.rank())
       if (sameRank.length === 4) {
         this._pairs.push(sameRank[0].rank())
         this._cards = this._cards.filter(card => !sameRank.includes(card))
+        pairedRank = sameRank[0].rank()
       }
     })
+    return pairedRank
   }
 
   addCards(...cards) {

@@ -27,6 +27,17 @@ class GameView {
     this.render(container)
   }
 
+  findPairs(playerName) {
+    const ranks = this._game.findPlayer(playerName).pairs()
+    const pairs = []
+    if (ranks.length !== 0) {
+      ranks.forEach((rank) => {
+        pairs.push(`<img class='pairedCard' src="public/img/cards/s${rank}.png"/>`)
+      })
+    }
+    return pairs
+  }
+
   getCardImages(playerName) {
     const cards = this._game.findPlayer(playerName).cards()
     return cards.map((card) => {
@@ -97,6 +108,9 @@ class GameView {
       <div class="human">
         <h2>${this._humanPlayerName}</h2>
         ${cardImages.join('')}
+        <div class="pairs">
+          ${this.findPairs(this._humanPlayerName).join('')}
+        <div>
       </div>
       <div class="buttonDiv">
         ${this.renderSubmitButton()}

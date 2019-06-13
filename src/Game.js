@@ -23,12 +23,15 @@ class Game {
     return this._log
   }
 
-  addLog(player, target, rank) {
-    if (rank) {
+  addLog(player, target, rank, statement) {
+    if (statement) {
+      this._log.unshift(`${player} ${statement}`)
+    } else if (rank) {
       this._log.unshift(`${player} took a(n) ${rank} from ${target}`)
     } else {
       this._log.unshift(`${player} went fishing`)
     }
+
     if (this._log.length > 10) {
       this._log.pop()
     }
@@ -78,13 +81,18 @@ class Game {
   }
 
   runBotTurn(botName) {
+    let bot
     if (botName) {
-      const bot = this.findPlayer(botName)
+      bot = this.findPlayer(botName)
+    } else {
+      this.incrementPlayerTurn()
+    }
+    if (bot !== undefined && bot.cards() !== undefined) {
       // Pick a random card from my hand
       const rankToRequest = bot.cards()[Math.floor(Math.random() * bot.cardsLeft())].rank()
       // Pick and random player that isn't me to request a card
       let playerToRequest = Object.values(this._players)[this.generateRandomNum(this._totalPlayers)]
-      while (playerToRequest === bot) {
+      while (playerToRequest === bot && playerToRequest.cardsLeft() > 0) {
         playerToRequest = Object.values(this._players)[this.generateRandomNum(this._totalPlayers)]
       }
       this.runRound(botName, playerToRequest.name(), rankToRequest)
@@ -103,18 +111,25 @@ class Game {
     return false
   }
 
+  pairCards(player) {
+    const pairedCardRank = player.pairCards()
+    if (pairedCardRank) {
+      this.addLog(player.name(), '', '', `paired four ${pairedCardRank}s`)
+    }
+  }
+
   runRound(playerName, targetName, rank) {
     const player = this.findPlayer(playerName)
     const target = this.findPlayer(targetName)
     // If the target has a card that the player asked for
     if (this.requestCards(player, target, rank) && rank) {
       this.addLog(player.name(), target.name(), rank)
-      player.pairCards()
+      this.pairCards(player)
       this.refillCards(player, target)
     } else {
       player.addCards(...this._deck.deal(1))
       this.addLog(player.name())
-      player.pairCards()
+      this.pairCards(player)
       this.incrementPlayerTurn()
     }
     if (this._playerTurn !== 1) {

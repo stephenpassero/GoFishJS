@@ -15,6 +15,14 @@ class Game {
     this._log = []
   }
 
+  playerPairs() {
+    const playerPairs = []
+    for (const player of Object.values(this._players)) {
+      playerPairs.push([player.name(), player.pairs().length])
+    }
+    return playerPairs
+  }
+
   playerTurn() {
     return this._playerTurn
   }

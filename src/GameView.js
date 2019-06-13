@@ -1,12 +1,12 @@
 /* eslint arrow-body-style: 0 */
 class GameView {
-  constructor(game, gameEnd) {
+  constructor(game, endGame) {
     this._game = game
     this._humanPlayerName = this._game.playerName()
     this._selectedRank = ''
     this._selectedOpponent = ''
     this._container = ''
-    this._gameEnd = gameEnd
+    this._endGame = endGame
   }
 
   cardClicked(card) {
@@ -120,7 +120,7 @@ class GameView {
     const playerCards = [...document.querySelectorAll('.card')]
     const totalCards = playerCards.concat([...document.querySelectorAll('.cardBack')])
     if (totalCards.length === 0) {
-      this.endGame()
+      this._endGame()
     }
   }
 

@@ -8,14 +8,14 @@ img {
 }
 
 form {
-  max-width: 400pt;
-  margin: 100pt auto;
+  max-width: 600px;
+  margin: 100px auto;
   justify-content: center;
   text-align: center;
 }
 
 label {
-  margin: 10pt;
+  margin: 10px;
 }
 
 .opponent {
@@ -25,25 +25,25 @@ label {
 }
 
 .flex-container {
-    display: flex;
-    justify-content: space-around;
-    margin: 0 auto;
-    flex-wrap: nowrap;
+  display: flex;
+  justify-content: space-around;
+  margin: 0 auto;
+  flex-wrap: nowrap;
 }
 
 .human {
-  max-width: 350pt;
-  margin: 5pt auto;
+  max-width: 400px;
+  margin: 5px auto;
   text-align: center;
 }
 
 .textInput {
-  border-radius: 4pt;
+  border-radius: 4px;
 }
 
 #submit {
-  margin: 10pt;
-  width: 50pt;
+  margin: 10px;
+  width: 50px;
 }
 
 .deck {

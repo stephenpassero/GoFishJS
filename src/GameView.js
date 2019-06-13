@@ -94,6 +94,27 @@ class GameView {
     return ''
   }
 
+  renderNextTurn() {
+    const humanPlayer = this._game.findPlayer(this._humanPlayerName)
+    if (humanPlayer.cardsLeft() === 0) {
+      return '<button class="nextTurn">Run Next Turn</button>'
+    }
+    return ''
+  }
+
+  nextTurn() {
+    this._game.incrementPlayerTurn()
+    this._game.runRound(this._humanPlayerName, '')
+    this.resetAndRender(this._container)
+  }
+
+  setNextTurnHandler() {
+    const nextTurnButton = document.querySelector('.nextTurn')
+    if (nextTurnButton) {
+      nextTurnButton.onclick = this.nextTurn.bind(this)
+    }
+  }
+
   render(container) {
     this._container = container
     const div = document.createElement('div')
@@ -112,6 +133,9 @@ class GameView {
           ${this.findPairs(this._humanPlayerName).join('')}
         <div>
       </div>
+      <div>
+        ${this.renderNextTurn()}
+      </div>
       <div class="buttonDiv">
         ${this.renderSubmitButton()}
       </div>
@@ -123,5 +147,6 @@ class GameView {
     container.appendChild(div)
     this.addHighlightOnClick()
     this.setSubmitRequestHandler()
+    this.setNextTurnHandler()
   }
 }

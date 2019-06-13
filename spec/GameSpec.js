@@ -2,7 +2,7 @@
 describe('Game', () => {
   let game, player, player2
   beforeEach(() => {
-    game = new Game('Me', 2)
+    game = new Game('Me', 3)
     game.startGame()
     player = game.findPlayer('Me')
     player2 = game.findPlayer('Player2')
@@ -36,6 +36,7 @@ describe('Game', () => {
   it('should have a number representing the player\'s turn', () => {
     game.incrementPlayerTurn()
     expect(game.playerTurn()).toEqual(2)
+    game.incrementPlayerTurn()
     game.incrementPlayerTurn()
     expect(game.playerTurn()).toEqual(1)
   })
@@ -80,6 +81,22 @@ describe('Game', () => {
       player2.setHand(card2)
       game.runRound(player.name(), player2.name(), card1.rank())
       expect(game.log()).toContain(`${player.name()} went fishing`)
+    })
+
+    it('runs bot turns when the player has run out of cards', () => {
+      const card1 = new Card('10', 'Spades')
+      const card2 = new Card('10', 'Diamonds')
+      const card3 = new Card('10', 'Hearts')
+      const card4 = new Card('10', 'Clubs')
+      player.setHand(card1)
+      player2.setHand(card2)
+      const player3 = game.findPlayer('Player3')
+      player3.setHand(card3, card4)
+      game.deck()._cards = []
+      debugger
+      game.runRound(player2.name(), player.name(), card2.rank())
+      expect(player2.cardsLeft()).toEqual(0)
+      expect(player3.cardsLeft()).toEqual(0)
     })
   })
 })

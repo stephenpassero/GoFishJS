@@ -24,10 +24,11 @@ class Game {
   }
 
   addLog(player, target, rank, statement) {
+    // Pull out into a log view that returns only the first ten element, not deletes them
     if (statement) {
       this._log.unshift(`${player} ${statement}`)
     } else if (rank) {
-      this._log.unshift(`${player} took a(n) ${rank} from ${target}`)
+      this._log.unshift(`${player} took all the ${rank}s from ${target}`)
     } else {
       this._log.unshift(`${player} went fishing`)
     }
@@ -87,7 +88,7 @@ class Game {
     } else {
       this.incrementPlayerTurn()
     }
-    if (bot !== undefined && bot.cards() !== undefined) {
+    if (bot !== undefined && bot.cards() !== undefined && bot.cardsLeft() !== 0) {
       // Pick a random card from my hand
       const rankToRequest = bot.cards()[Math.floor(Math.random() * bot.cardsLeft())].rank()
       // Pick and random player that isn't me to request a card
@@ -122,14 +123,16 @@ class Game {
     const player = this.findPlayer(playerName)
     const target = this.findPlayer(targetName)
     // If the target has a card that the player asked for
-    if (this.requestCards(player, target, rank) && rank) {
+    if (rank && this.requestCards(player, target, rank)) {
       this.addLog(player.name(), target.name(), rank)
       this.pairCards(player)
       this.refillCards(player, target)
-    } else {
+    } else if (targetName) {
       player.addCards(...this._deck.deal(1))
       this.addLog(player.name())
       this.pairCards(player)
+      this.incrementPlayerTurn()
+    } else {
       this.incrementPlayerTurn()
     }
     if (this._playerTurn !== 1) {

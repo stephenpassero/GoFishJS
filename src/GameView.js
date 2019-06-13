@@ -1,11 +1,12 @@
 /* eslint arrow-body-style: 0 */
 class GameView {
-  constructor(game) {
+  constructor(game, gameEnd) {
     this._game = game
     this._humanPlayerName = this._game.playerName()
     this._selectedRank = ''
     this._selectedOpponent = ''
     this._container = ''
+    this._gameEnd = gameEnd
   }
 
   cardClicked(card) {
@@ -103,8 +104,8 @@ class GameView {
   }
 
   nextTurn() {
-    this._game.incrementPlayerTurn()
-    this._game.runRound(this._humanPlayerName, '')
+    const playerName = Object.keys(this._game.players())[this._game.playerTurn() - 1]
+    this._game.runRound(playerName, '')
     this.resetAndRender(this._container)
   }
 
@@ -112,6 +113,14 @@ class GameView {
     const nextTurnButton = document.querySelector('.nextTurn')
     if (nextTurnButton) {
       nextTurnButton.onclick = this.nextTurn.bind(this)
+    }
+  }
+
+  checkGameOver() {
+    const playerCards = [...document.querySelectorAll('.card')]
+    const totalCards = playerCards.concat([...document.querySelectorAll('.cardBack')])
+    if (totalCards.length === 0) {
+      this.endGame()
     }
   }
 
@@ -148,5 +157,6 @@ class GameView {
     this.addHighlightOnClick()
     this.setSubmitRequestHandler()
     this.setNextTurnHandler()
+    this.checkGameOver()
   }
 }

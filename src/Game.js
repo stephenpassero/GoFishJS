@@ -135,7 +135,7 @@ class Game {
     } else {
       this.incrementPlayerTurn()
     }
-    if (this._playerTurn !== 1) {
+    while (this._playerTurn !== 1) {
       const botPlayerName = Object.keys(this._players)[this._playerTurn - 1]
       this.runBotTurn(botPlayerName)
     }

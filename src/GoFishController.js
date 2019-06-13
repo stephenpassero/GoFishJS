@@ -12,8 +12,13 @@ class GoFishController {
   startGame(name, numOfPlayers) {
     const game = new Game(name, numOfPlayers) // new Game
     game.startGame()
-    const view = new GameView(game) // new GameView
+    const view = new GameView(game, this.endGame.bind(this)) // new GameView
     view.render(this.container())
+  }
+
+  endGame(game) {
+    const endGameView = new EndGameView(game)
+    endGameView.render(this.container())
   }
 }
 

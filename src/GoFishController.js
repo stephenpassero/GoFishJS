@@ -17,6 +17,7 @@ class GoFishController {
   }
 
   endGame(game) {
+    this.container().innerHTML = ''
     const endGameView = new EndGameView(game)
     endGameView.render(this.container())
   }

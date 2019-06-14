@@ -32,7 +32,7 @@ label {
 }
 
 .human {
-  max-width: 400px;
+  max-width: 550px;
   margin: 5px auto;
   text-align: center;
 }
@@ -41,8 +41,13 @@ label {
   border-radius: 4px;
 }
 
-.finalrankings {
+.rankings {
+  margin: 200px auto;
   text-align: center;
+}
+
+.rankedItem {
+  margin: 10px;
 }
 
 #submit {

@@ -18,7 +18,7 @@ describe('EndGameView', () => {
   })
 
   it('shows the players of the game and points of the game', () => {
-    const standing = document.querySelector('h2')
+    const standing = document.querySelector('h3')
     expect(standing.textContent).toEqual('HumanPlayer: 5 points')
   })
 })

@@ -1,11 +1,11 @@
 /* eslint arrow-body-style: 0 */
 class GameView {
-  constructor(game, endGame) {
+  constructor(container, game, endGame) {
     this._game = game
-    this._humanPlayerName = this._game.playerName()
+    this._humanPlayerName = game.playerName()
     this._selectedRank = ''
     this._selectedOpponent = ''
-    this._container = ''
+    this._container = container
     this._endGame = endGame
   }
 
@@ -28,41 +28,12 @@ class GameView {
     this.render(container)
   }
 
-  findPairs(playerName) {
-    const ranks = this._game.findPlayer(playerName).pairs()
-    const pairs = []
-    if (ranks.length !== 0) {
-      ranks.forEach((rank) => {
-        pairs.push(`<img class='pairedCard' src="public/img/cards/s${rank}.png"/>`)
-      })
-    }
-    return pairs
-  }
-
-  getCardImages(playerName) {
-    const cards = this._game.findPlayer(playerName).cards()
-    return cards.map((card) => {
-      if (card.rank() === this._selectedRank) {
-        return `<img class="card selected" name="${card.rank()}" src="public/img/cards/${card.imagePath()}.png" />`
-      }
-      return `<img class="card" name="${card.rank()}" src="public/img/cards/${card.imagePath()}.png" />`
-    })
-  }
-
-  addHighlightOnClick() {
-    const cardsImages = document.querySelectorAll('.card')
-    for (const card of cardsImages) {
-      card.onclick = this.cardClicked.bind(this, card)
-    }
-    const opponentsDiv = document.querySelectorAll('.opponent')
-    for (const opponentDiv of opponentsDiv) {
-      opponentDiv.onclick = this.opponentClicked.bind(this, opponentDiv)
-    }
-  }
-
   renderSubmitButton() {
     if (this._selectedOpponent !== '' && this._selectedRank !== '') {
-      return '<button class="requestCards">Request Cards</button>'
+      return `
+      <div class="buttonDiv">
+        <button class="requestCards">Request Cards</button>
+      </div>`
     }
     return ''
   }
@@ -79,41 +50,68 @@ class GameView {
     }
   }
 
+  addHighlightOnClickHandler() {
+    const cardsImages = document.querySelectorAll('.card')
+    for (const card of cardsImages) {
+      card.onclick = this.cardClicked.bind(this, card)
+    }
+    const opponentsDiv = document.querySelectorAll('.opponent')
+    for (const opponentDiv of opponentsDiv) {
+      opponentDiv.onclick = this.opponentClicked.bind(this, opponentDiv)
+    }
+  }
+
+  setNextRoundHandler() {
+    const nextRoundButton = document.querySelector('.nextRound')
+    if (nextRoundButton) {
+      nextRoundButton.onclick = this.nextRound.bind(this)
+    }
+  }
+
+  setHandlers() {
+    this.addHighlightOnClickHandler()
+    this.setSubmitRequestHandler()
+    this.setNextRoundHandler()
+  }
+
   getBotHTML() {
     let opponentView
-    return this._game.botNames().map((name) => {
+    return `<div class="flex-container">${this._game.botNames().map((name) => {
       const player = this._game.findPlayer(name)
       opponentView = new OpponentView(name, player.cards(), player.pairs(), this._selectedOpponent)
       return opponentView.render()
-    })
+    }).join('')}</div>`
+  }
+
+  getHumanPlayerHTML() {
+    const name = this._humanPlayerName
+    const humanPlayerView = new HumanPlayerView(name, this._game, this._selectedRank)
+    return humanPlayerView.render()
   }
 
   renderDeck() {
     if (this._game.deck().cardsLeft() > 0) {
-      return '<img src="public/img/cards/backs_red.png"/>'
+      return `
+      <div class="deck">
+        <img src="public/img/cards/backs_red.png"/>
+      </div>
+      `
     }
     return ''
   }
 
-  renderNextTurn() {
+  renderNextRound() {
     const humanPlayer = this._game.findPlayer(this._humanPlayerName)
     if (humanPlayer.cardsLeft() === 0) {
-      return '<button class="nextTurn">Run Next Turn</button>'
+      return '<div><button class="nextRound">Run Next Round</button></div>'
     }
     return ''
   }
 
-  nextTurn() {
+  nextRound() {
     const playerName = Object.keys(this._game.players())[this._game.playerTurn() - 1]
-    this._game.runRound(playerName, '')
+    this._game.skipRound()
     this.resetAndRender(this._container)
-  }
-
-  setNextTurnHandler() {
-    const nextTurnButton = document.querySelector('.nextTurn')
-    if (nextTurnButton) {
-      nextTurnButton.onclick = this.nextTurn.bind(this)
-    }
   }
 
   checkGameOver() {
@@ -124,39 +122,29 @@ class GameView {
     }
   }
 
-  render(container) {
-    this._container = container
-    const div = document.createElement('div')
-    const cardImages = this.getCardImages(this._humanPlayerName)
-    const gameView = `
-      <div class="flex-container">
-        ${this.getBotHTML(container).join('')}
-      </div>
-      <div class="deck">
-        ${this.renderDeck()}
-      </div>
-      <div class="human">
-        <h2>${this._humanPlayerName}</h2>
-        ${cardImages.join('')}
-        <div class="pairs">
-          ${this.findPairs(this._humanPlayerName).join('')}
-        <div>
-      </div>
-      <div>
-        ${this.renderNextTurn()}
-      </div>
-      <div class="buttonDiv">
-        ${this.renderSubmitButton()}
-      </div>
+  renderGameLog() {
+    return `
       <div class="log">
         ${this._game.log().join('<br>')}
       </div>
     `
-    div.innerHTML = gameView
-    container.appendChild(div)
-    this.addHighlightOnClick()
-    this.setSubmitRequestHandler()
-    this.setNextTurnHandler()
+  }
+
+  gameView() {
+    return `
+    ${this.getBotHTML()}
+    ${this.renderDeck()}
+    ${this.getHumanPlayerHTML()}
+    ${this.renderNextRound()}
+    ${this.renderSubmitButton()}
+    ${this.renderGameLog()}`
+  }
+
+  render() {
+    const div = document.createElement('div')
+    div.innerHTML = this.gameView()
+    this._container.appendChild(div)
+    this.setHandlers()
     this.checkGameOver()
   }
 }

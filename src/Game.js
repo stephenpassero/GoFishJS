@@ -12,7 +12,16 @@ class Game {
     this._deck = new Deck()
     this._deck.shuffle()
     this._playerTurn = 1
-    this._log = []
+    this._log = new Log()
+  }
+
+  startGame() {
+    const humanPlayer = new Player(this._playerName)
+    this._players[humanPlayer.name().toLowerCase()] = humanPlayer
+    for (const botName of this._botNames) {
+      this._players[botName.toLowerCase()] = new Player(botName)
+    }
+    Object.values(this._players).forEach(player => player.addCards(...this._deck.deal(5)))
   }
 
   playerPairs() {
@@ -28,22 +37,11 @@ class Game {
   }
 
   log() {
-    return this._log
+    return this._log.getLog()
   }
 
   addLog(player, target, rank, statement) {
-    // Pull out into a log view that returns only the first ten element, not deletes them
-    if (statement) {
-      this._log.unshift(`${player} ${statement}`)
-    } else if (rank) {
-      this._log.unshift(`${player} took all the ${rank}s from ${target}`)
-    } else {
-      this._log.unshift(`${player} went fishing`)
-    }
-
-    if (this._log.length > 10) {
-      this._log.pop()
-    }
+    this._log.addLog(player, target, rank, statement)
   }
 
   incrementPlayerTurn() {
@@ -76,11 +74,9 @@ class Game {
   refillCards(...playersToRefill) {
     for (const player of playersToRefill) {
       if (player.cardsLeft() === 0) {
-        if (this._deck.cardsLeft() < 5) {
-          player.addCards(...this._deck.deal(this._deck.cardsLeft()))
-        } else {
-          player.addCards(...this._deck.deal(5))
-        }
+        // Deck.deal() only deal as many cards as it has, so if there is only 3
+        // cards left in the deck it will only deal 3 cards
+        player.addCards(...this._deck.deal(5))
       }
     }
   }
@@ -89,22 +85,21 @@ class Game {
     return Math.floor(Math.random() * maxNum)
   }
 
-  runBotTurn(botName) {
-    let bot
-    if (botName) {
-      bot = this.findPlayer(botName)
-    } else {
-      this.incrementPlayerTurn()
+  findValidPlayerToRequest(bot) {
+    // Pick and random player that isn't me and has cards to request a card from
+    let playerToRequest = Object.values(this._players)[this.generateRandomNum(this._totalPlayers)]
+    while (playerToRequest === bot && playerToRequest.cardsLeft() > 0) {
+      playerToRequest = Object.values(this._players)[this.generateRandomNum(this._totalPlayers)]
     }
+    return playerToRequest
+  }
+
+  runBotTurn(botName) {
+    const bot = this.findPlayer(botName)
     if (bot !== undefined && bot.cards() !== undefined && bot.cardsLeft() !== 0) {
       // Pick a random card from my hand
-      const rankToRequest = bot.cards()[Math.floor(Math.random() * bot.cardsLeft())].rank()
-      // Pick and random player that isn't me to request a card
-      let playerToRequest = Object.values(this._players)[this.generateRandomNum(this._totalPlayers)]
-      while (playerToRequest === bot && playerToRequest.cardsLeft() > 0) {
-        playerToRequest = Object.values(this._players)[this.generateRandomNum(this._totalPlayers)]
-      }
-      this.runRound(botName, playerToRequest.name(), rankToRequest)
+      const rankToRequest = bot.cards()[this.generateRandomNum(bot.cardsLeft())].rank()
+      this.runRound(botName, this.findValidPlayerToRequest(bot).name(), rankToRequest)
     } else {
       this.incrementPlayerTurn()
     }
@@ -127,36 +122,41 @@ class Game {
     }
   }
 
-  runRound(playerName, targetName, rank) {
-    const player = this.findPlayer(playerName)
-    const target = this.findPlayer(targetName)
-    // If the target has a card that the player asked for
-    if (rank && this.requestCards(player, target, rank)) {
-      this.addLog(player.name(), target.name(), rank)
-      this.pairCards(player)
-      this.refillCards(player, target)
-    } else if (targetName) {
-      player.addCards(...this._deck.deal(1))
-      this.addLog(player.name())
-      this.pairCards(player)
-      this.incrementPlayerTurn()
-    } else {
-      this.incrementPlayerTurn()
-    }
+  runBotRounds() {
     while (this._playerTurn !== 1) {
       const botPlayerName = Object.keys(this._players)[this._playerTurn - 1]
       this.runBotTurn(botPlayerName)
     }
   }
 
-  startGame() {
-    const humanPlayer = new Player(this._playerName)
-    this._players[humanPlayer.name().toLowerCase()] = humanPlayer
-    for (const botName of this._botNames) {
-      this._players[botName.toLowerCase()] = new Player(botName)
+  skipRound() {
+    this.incrementPlayerTurn()
+    this.runBotRounds()
+  }
+
+  // TRASH
+  runBasicRoundSteps(logOptions, playerToPair, playersToRefill) {
+    this.addLog(logOptions[0], logOptions[1], logOptions[2])
+    this.pairCards(playerToPair)
+    this.refillCards(...playersToRefill)
+  }
+
+  goFishing(player) {
+    player.addCards(...this._deck.deal(1))
+    this.runBasicRoundSteps([player.name()], player, [player])
+    this.incrementPlayerTurn()
+  }
+
+  // I'm not really sure how to simplify this any more
+  runRound(playerName, targetName, rank) {
+    const player = this.findPlayer(playerName)
+    const target = this.findPlayer(targetName)
+    // If the target has a card that the player asked for
+    if (this.requestCards(player, target, rank)) {
+      this.runBasicRoundSteps([playerName, targetName, rank], player, [player, target])
+    } else if (targetName) {
+      this.goFishing(player)
     }
-    for (const player of Object.values(this._players)) {
-      player.addCards(...this._deck.deal(5))
-    }
+    this.runBotRounds()
   }
 }

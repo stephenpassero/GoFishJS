@@ -17,7 +17,6 @@ describe('Game', () => {
   })
 
   it('deals 5 cards to those players', () => {
-    const player = game.players().me
     expect(player.cardsLeft()).toEqual(5)
   })
 
@@ -47,19 +46,28 @@ describe('Game', () => {
     expect(game.log()).toEqual(['Player2 went fishing', 'Player1 took all the Js from Player2'])
   })
 
-  it('refills player\'s cards when they run out', () => {
-    const card1 = new Card('10', 'Spades')
-    const card2 = new Card('10', 'Diamonds')
-    player.setHand(card1)
-    player2.setHand(card2)
-    game._deck._cards.length = 3
-    game.runRound(player.name(), player2.name(), card1.rank())
-    expect(player2.cardsLeft()).toEqual(3)
-  })
-
   it('can run a bot\'s turn', () => {
     game.runBotTurn(player2.name())
     expect(player2.cardsLeft()).toBeGreaterThan(5)
+  })
+
+  describe('#refillCards', () => {
+    it('refills player\'s cards when they run out', () => {
+      const card1 = new Card('10', 'Spades')
+      const card2 = new Card('10', 'Diamonds')
+      player.setHand(card1)
+      player2.setHand(card2)
+      game.deck()._cards.length = 3
+      game.runRound(player.name(), player2.name(), card1.rank())
+      expect(player2.cardsLeft()).toEqual(3)
+    })
+
+    it('deals less than 5 cards when refilling if there are less than 5 cards in the deck', () => {
+      game.deck()._cards.length = 4
+      player.setHand()
+      game.refillCards(player)
+      expect(player.cardsLeft()).toEqual(4)
+    })
   })
 
   describe('#runRound', () => {

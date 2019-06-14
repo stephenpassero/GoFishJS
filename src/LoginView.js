@@ -21,18 +21,20 @@ class LoginView {
     return document.getElementById('submit')
   }
 
-  render(container) {
-    const div = document.createElement('div')
-    const form = `
+  form() {
+    return `
       <form>
         <label for="playerName">Player Name</label>
         <input type="text" class="textInput" required id="playerName"/>
         <label for="playerName">Number of Players</label>
         <input type="number" class="textInput" min="2" max="6" required id="totalPlayers"/>
         <input type="submit" value="Submit" id="submit"/>
-      </form>
-    `
-    div.innerHTML = form
+      </form>`
+  }
+
+  render(container) {
+    const div = document.createElement('div')
+    div.innerHTML = this.form()
     div.onsubmit = this.submit.bind(this)
     container.appendChild(div)
   }

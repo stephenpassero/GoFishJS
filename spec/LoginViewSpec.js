@@ -5,7 +5,7 @@ describe('LoginView', () => {
       calledWith = name
       totalPlayers = numOfPlayers
     }
-    const loginView = new LoginView(onLogin) // eslint-disable-line no-undef
+    const loginView = new LoginView(onLogin)
     const container = document.createElement('div')
     document.body.appendChild(container)
     loginView.render(container)

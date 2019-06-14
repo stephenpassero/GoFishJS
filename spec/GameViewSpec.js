@@ -3,10 +3,10 @@ describe('GameView', () => {
   beforeEach(() => {
     game = new Game('A Cool Person', 2)
     game.startGame()
-    gameView = new GameView(game)
     container = document.createElement('div')
     document.body.appendChild(container)
-    gameView.render(container)
+    gameView = new GameView(container, game)
+    gameView.render()
   })
 
   afterEach(() => {

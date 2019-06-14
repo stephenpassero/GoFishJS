@@ -1,11 +1,11 @@
 /* eslint arrow-body-style: 0 */
 class GameView {
-  constructor(game, endGame) {
+  constructor(container, game, endGame) {
     this._game = game
-    this._humanPlayerName = this._game.playerName()
+    this._humanPlayerName = game.playerName()
     this._selectedRank = ''
     this._selectedOpponent = ''
-    this._container = ''
+    this._container = container
     this._endGame = endGame
   }
 
@@ -28,20 +28,12 @@ class GameView {
     this.render(container)
   }
 
-  addHighlightOnClick() {
-    const cardsImages = document.querySelectorAll('.card')
-    for (const card of cardsImages) {
-      card.onclick = this.cardClicked.bind(this, card)
-    }
-    const opponentsDiv = document.querySelectorAll('.opponent')
-    for (const opponentDiv of opponentsDiv) {
-      opponentDiv.onclick = this.opponentClicked.bind(this, opponentDiv)
-    }
-  }
-
   renderSubmitButton() {
     if (this._selectedOpponent !== '' && this._selectedRank !== '') {
-      return '<button class="requestCards">Request Cards</button>'
+      return `
+      <div class="buttonDiv">
+        <button class="requestCards">Request Cards</button>
+      </div>`
     }
     return ''
   }
@@ -58,13 +50,37 @@ class GameView {
     }
   }
 
+  addHighlightOnClickHandler() {
+    const cardsImages = document.querySelectorAll('.card')
+    for (const card of cardsImages) {
+      card.onclick = this.cardClicked.bind(this, card)
+    }
+    const opponentsDiv = document.querySelectorAll('.opponent')
+    for (const opponentDiv of opponentsDiv) {
+      opponentDiv.onclick = this.opponentClicked.bind(this, opponentDiv)
+    }
+  }
+
+  setNextRoundHandler() {
+    const nextRoundButton = document.querySelector('.nextRound')
+    if (nextRoundButton) {
+      nextRoundButton.onclick = this.nextRound.bind(this)
+    }
+  }
+
+  setHandlers() {
+    this.addHighlightOnClickHandler()
+    this.setSubmitRequestHandler()
+    this.setNextRoundHandler()
+  }
+
   getBotHTML() {
     let opponentView
-    return this._game.botNames().map((name) => {
+    return `<div class="flex-container">${this._game.botNames().map((name) => {
       const player = this._game.findPlayer(name)
       opponentView = new OpponentView(name, player.cards(), player.pairs(), this._selectedOpponent)
       return opponentView.render()
-    })
+    }).join('')}</div>`
   }
 
   getHumanPlayerHTML() {
@@ -87,7 +103,7 @@ class GameView {
   renderNextRound() {
     const humanPlayer = this._game.findPlayer(this._humanPlayerName)
     if (humanPlayer.cardsLeft() === 0) {
-      return '<button class="nextRound">Run Next Round</button>'
+      return '<div><button class="nextRound">Run Next Round</button></div>'
     }
     return ''
   }
@@ -98,13 +114,6 @@ class GameView {
     this.resetAndRender(this._container)
   }
 
-  setNextRoundHandler() {
-    const nextRoundButton = document.querySelector('.nextRound')
-    if (nextRoundButton) {
-      nextRoundButton.onclick = this.nextRound.bind(this)
-    }
-  }
-
   checkGameOver() {
     const playerCards = [...document.querySelectorAll('.card')]
     const totalCards = playerCards.concat([...document.querySelectorAll('.cardBack')])
@@ -113,30 +122,29 @@ class GameView {
     }
   }
 
-  render(container) {
-    this._container = container
-    const div = document.createElement('div')
-    const gameView = `
-      <div class="flex-container">
-        ${this.getBotHTML().join('')}
-      </div>
-      ${this.renderDeck()}
-      ${this.getHumanPlayerHTML()}
-      <div>
-        ${this.renderNextRound()}
-      </div>
-      <div class="buttonDiv">
-        ${this.renderSubmitButton()}
-      </div>
+  renderGameLog() {
+    return `
       <div class="log">
         ${this._game.log().join('<br>')}
       </div>
     `
-    div.innerHTML = gameView
-    container.appendChild(div)
-    this.addHighlightOnClick()
-    this.setSubmitRequestHandler()
-    this.setNextRoundHandler()
+  }
+
+  gameView() {
+    return `
+    ${this.getBotHTML()}
+    ${this.renderDeck()}
+    ${this.getHumanPlayerHTML()}
+    ${this.renderNextRound()}
+    ${this.renderSubmitButton()}
+    ${this.renderGameLog()}`
+  }
+
+  render() {
+    const div = document.createElement('div')
+    div.innerHTML = this.gameView()
+    this._container.appendChild(div)
+    this.setHandlers()
     this.checkGameOver()
   }
 }

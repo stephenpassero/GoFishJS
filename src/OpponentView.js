@@ -16,27 +16,34 @@ class OpponentView {
     return pairs
   }
 
-  render() {
-    const opponentMarkup = `<h3>${this._name}</h3>
-    ${this._cards.map(card => '<img class="cardBack" src="public/img/cards/backs_red.png"/>').join('')}`
-    const pairedCards = `
+  pairedCards() {
+    return `
       <div class='pairedCards'>
         ${this.ranksToImg(this._pairedRanks).join('')}
       </div>
     `
-    if (this._selectedOpponent === this._name) {
-      return `
-        <div class="opponent selected" id="${this._name}">
-          ${opponentMarkup}
-          ${pairedCards}
-        </div>
-      `
-    }
+  }
+
+  opponentMarkup() {
     return `
-      <div class="opponent" id="${this._name}">
-        ${opponentMarkup}
-        ${pairedCards}
+      <h3>${this._name}</h3>
+      ${this._cards.map(card => '<img class="cardBack" src="public/img/cards/backs_red.png"/>').join('')}
+    `
+  }
+
+  renderOpponentDiv(classes) {
+    return `
+      <div class="${classes}" id="${this._name}">
+        ${this.opponentMarkup()}
+        ${this.pairedCards()}
       </div>
     `
+  }
+
+  render() {
+    if (this._selectedOpponent === this._name) {
+      return this.renderOpponentDiv('opponent selected')
+    }
+    return this.renderOpponentDiv('opponent')
   }
 }

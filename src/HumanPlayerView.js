@@ -20,7 +20,6 @@ class HumanPlayerView {
 
   findPairs(playerName) {
     const ranks = this._game.findPlayer(playerName).pairs()
-    debugger
     if (ranks.length !== 0) {
       return ranks.map(rank => `<img class='pairedCard' src="public/img/cards/s${rank}.png"/>`)
     }

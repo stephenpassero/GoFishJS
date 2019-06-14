@@ -25,14 +25,10 @@ class Deck {
   shuffle() {
     const cards = this._cards
     let { length } = cards
-    let i
-
     while (length) {
-      i = Math.floor(Math.random() * length--);
-
+      const i = Math.floor(Math.random() * length--);
       [cards[length], cards[i]] = [cards[i], cards[length]]
     }
-
     this._cards = cards
   }
 }

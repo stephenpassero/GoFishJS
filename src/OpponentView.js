@@ -24,7 +24,6 @@ class OpponentView {
         ${this.ranksToImg(this._pairedRanks).join('')}
       </div>
     `
-
     if (this._selectedOpponent === this._name) {
       return `
         <div class="opponent selected" id="${this._name}">
@@ -33,7 +32,6 @@ class OpponentView {
         </div>
       `
     }
-
     return `
       <div class="opponent" id="${this._name}">
         ${opponentMarkup}

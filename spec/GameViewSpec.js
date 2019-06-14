@@ -41,25 +41,6 @@ describe('GameView', () => {
       expect(gameLog.innerHTML).not.toEqual('')
     })
 
-    it('shows paired cards', () => {
-      // I modify the game deck here because otherwise every once in a while the player draws
-      // a card of the same rank that he's trying to pair and that messes things up
-      const card1 = new Card('3', 'Hearts')
-      const card2 = new Card('3', 'Diamonds')
-      const card3 = new Card('3', 'Spades')
-      const card4 = new Card('3', 'Clubs')
-      const player = game.findPlayer('A Cool Person')
-      player.setHand(card1, card2, card3, card4)
-      const modifiedDeck = game.deck().cards().filter(card => card.rank() !== '3')
-      game.deck()._cards = modifiedDeck
-      document.querySelector('.card').click()
-      document.querySelector('h3').click()
-      const requestCardsButton = document.querySelector('button')
-      requestCardsButton.click()
-      const pairedCards = document.querySelectorAll('.pairedCard')
-      expect(pairedCards.length).toBeGreaterThan(0)
-    })
-
     it('requests cards from other players', () => {
       const card1 = new Card('4', 'Hearts')
       const player = game.findPlayer('A Cool Person')
